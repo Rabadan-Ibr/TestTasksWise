@@ -33,14 +33,17 @@ class AudioService(BaseCRUD):
 
         # Создание пути для файла и конвертация в mp3.
         file_name = destination / f'{uuid.uuid4()}.mp3'
-        subprocess.run([
-            'ffmpeg',
-            '-i', temp,
-            '-ar', '44100',
-            '-ac', '2',
-            '-b:a', '192k',
-            file_name,
-        ])
+        try:
+            subprocess.run([
+                'ffmpeg',
+                '-i', temp,
+                '-ar', '44100',
+                '-ac', '2',
+                '-b:a', '192k',
+                file_name,
+            ])
+        except Exception as err:
+            return None
         # Удаление временного файла.
         temp.unlink()
         return file_name if file_name.exists() else None
